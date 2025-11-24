@@ -40,20 +40,28 @@ template<class T>
 
 const int mod = 1e9 + 7;
 const int inf = 1e9;
-const int N = 1e4 + 5;
+const int N = 2e3 + 5;
 
-int n, a[N];
-map<int, int> exist;
+int n, dp[N][N];
+string s;
 
 void process() {
-    cin >> n;
-    FOR(i, 1, n) cin >> a[i], exist[a[i]] = 1;
-    int ans = 0;
-    int f1 = 1, f2 = 1;
-    FOR(i, 1, 50) {
-        f1 = f1 + f2;
-        swap(f1, f2);
+    cin >> s;
+    n = s.size(); s = ' ' + s;
+    memset(dp, -0x3f, sizeof(dp));
+    FOR(i, 1, n) {
+        dp[i][i] = 1;
+        if(i < n && s[i] == s[i + 1]) 
+            dp[i][i + 1] = 2;
     }
+    FORD(i, n, 1) {
+        FOR(j, i + 2, n) {
+            if(s[i] == s[j]) maximize(dp[i][j], dp[i + 1][j - 1] + 2);
+            maximize(dp[i][j], dp[i + 1][j]);
+            maximize(dp[i][j], dp[i][j - 1]);
+        }
+    }
+    cout << n - dp[1][n] << '\n';
 }
 
 signed main() {
